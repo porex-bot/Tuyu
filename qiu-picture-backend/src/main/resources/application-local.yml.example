@@ -1,0 +1,10 @@
+# 对象存储配置示例
+# 复制此文件为 application-local.yml 并填入真实配置
+
+cos:
+  client:
+    host: https://your-bucket.cos.ap-region.myqcloud.com
+    secretId: your_secret_id_here
+    secretKey: your_secret_key_here
+    region: ap-beijing
+    bucket: your-bucket-name

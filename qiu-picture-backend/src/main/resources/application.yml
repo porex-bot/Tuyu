@@ -1,0 +1,97 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+    #cookie30天过期
+    session:
+      cookie:
+        max-age: 2592000
+spring:
+  application:
+    name: qiu-picture-backend
+    #数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/qiu_picture?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+#  开放更大的文件上传体积
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  # Redis 配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 5000
+  #session
+  session:
+    store-type: redis
+    timeout: 2592000
+
+  # 空间图片分表
+  shardingsphere:
+    datasource:
+      names: qiu_picture
+      qiu_picture:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: ${SHARDING_DB_URL:${DB_URL:jdbc:mysql://localhost:3306/qiu_picture?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true}}
+        username: ${SHARDING_DB_USERNAME:${DB_USERNAME:root}}
+        password: ${SHARDING_DB_PASSWORD:${DB_PASSWORD:}}
+    rules:
+      sharding:
+        tables:
+          picture:
+            actual-data-nodes: qiu_picture.picture  # 动态分表
+            table-strategy:
+              standard:
+                sharding-column: spaceId
+                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
+        sharding-algorithms:
+          picture_sharding_algorithm:
+            type: CLASS_BASED
+            props:
+              strategy: standard
+              algorithmClassName: com.qiu.qiupicturebackend.manager.sharding.PictureShardingAlgorithm
+    props:
+      sql-show: true
+
+
+mybatis-plus:
+  configuration:
+    # MyBatis 配置
+    map-underscore-to-camel-case: false
+    #仅在开发环境打印日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #逻辑删除
+  global-config:
+    db-config:
+      logic-delete-field: isDelete #逻辑删除实体字段名
+      logic-delete-value: 1 #逻辑已删除值
+      logic-not-delete-value: 0 #逻辑未删除
+    enable-sql-runner: true
+#接口文档配置
+knife4j:
+  enable: true
+  openapi:
+    title: 接口文档
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - com.qiu.qiupicturebackend.controller
+##对象存储
+## 对象存储配置（需要从腾讯云获取）
+#cos:
+#  client:
+#    host: xxx
+#    secretId: xxx
+#    secretKey: xxx
+#    region: xxx
+#    bucket: xxx
+##阿里 AI 配置
+#aliYunAi:
+#  apiKey:

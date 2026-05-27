@@ -1,0 +1,32 @@
+.DS_Store
+Thumbs.db
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Local tool and editor state
+.claude/
+.vscode/
+.idea/
+*.iml
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.tsbuildinfo
+*.log
+
+# Backend
+target/
+application-local.yml
+application-prod.yml
+
+# OS / temp
+*.tmp
+*.temp

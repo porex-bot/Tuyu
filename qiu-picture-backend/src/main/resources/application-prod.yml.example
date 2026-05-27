@@ -1,0 +1,45 @@
+# =============================================================================
+# 生产环境配置示例
+# 复制此文件为 application-prod.yml 并填入真实值
+# 所有敏感信息必须通过环境变量注入，不要硬编码到配置文件中
+# =============================================================================
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/qiu_picture}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
+  shardingsphere:
+    datasource:
+      qiu_picture:
+        url: ${SHARDING_DB_URL:${DB_URL:jdbc:mysql://localhost:3306/qiu_picture}}
+        username: ${SHARDING_DB_USERNAME:${DB_USERNAME:root}}
+        password: ${SHARDING_DB_PASSWORD:${DB_PASSWORD:}}
+    props:
+      sql-show: false
+
+# 生产环境关闭接口文档或加权限保护
+knife4j:
+  enable: false
+
+# 对象存储（腾讯云 COS）
+cos:
+  client:
+    host: ${COS_HOST:}
+    secretId: ${COS_SECRET_ID:}
+    secretKey: ${COS_SECRET_KEY:}
+    region: ${COS_REGION:}
+    bucket: ${COS_BUCKET:}
+
+# 阿里云 AI 配置
+aliYunAi:
+  apiKey: ${ALIYUN_AI_API_KEY:}
+
+# 服务器端口（可通过环境变量覆盖）
+server:
+  port: ${SERVER_PORT:8123}
